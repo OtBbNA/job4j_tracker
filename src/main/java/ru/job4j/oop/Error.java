@@ -6,22 +6,20 @@ public class Error {
     private int status;
     private String message;
 
-
     public Error() {
     }
 
     public Error(boolean active, int status, String message) {
         this.active = active;
-        this.message= message;
+        this.message = message;
         this.status = status;
     }
 
-    public void output(){
+    public void output() {
         System.out.println(active);
         System.out.println(status);
         System.out.println(message);
     }
-
 
     public static void main(String[] args) {
     Error error = new Error();
