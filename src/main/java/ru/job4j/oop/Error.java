@@ -21,7 +21,7 @@ public class Error {
         System.out.println(message);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Error error = new Error();
         error.output();
         Error error1 = new Error(true, 2, "Play");
