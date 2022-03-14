@@ -30,6 +30,6 @@ public class Error {
         error2.output();
         Error error3 = new Error(false, 0, "DeBug");
         error3.output();
-     }
+    }
 }
 
