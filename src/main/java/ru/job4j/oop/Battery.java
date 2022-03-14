@@ -9,11 +9,12 @@ public class Battery {
     }
 
     public void exchange(Battery another) {
-        this.load = another.load + this.load;
-        another.load = 0;
+        another.load += this.load;
+        this.load = 0;
     }
 
     public int getLoad() {
         return load;
     }
 }
+

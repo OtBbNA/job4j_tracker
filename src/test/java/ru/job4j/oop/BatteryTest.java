@@ -13,7 +13,7 @@ public class BatteryTest {
         Battery another = new Battery(50);
         charger.exchange(another);
         int expected = 80;
-        assertThat(expected, is(charger.getLoad()));
+        assertThat(expected, is(another.getLoad()));
     }
 
     @Test
@@ -21,7 +21,7 @@ public class BatteryTest {
         Battery charger = new Battery(80);
         Battery another = new Battery(20);
         charger.exchange(another);
-        int expected = 100;
+        int expected = 0;
         assertThat(expected, is(charger.getLoad()));
     }
 
@@ -31,6 +31,6 @@ public class BatteryTest {
         Battery another = new Battery(0);
         charger.exchange(another);
         int expected = 95;
-        assertThat(expected, is(charger.getLoad()));
+        assertThat(expected, is(another.getLoad()));
     }
 }
