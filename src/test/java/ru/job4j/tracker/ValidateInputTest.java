@@ -44,7 +44,7 @@ public class ValidateInputTest {
         assertThat(selected, is(3));
     }
 
-    @Test (expected = ArrayIndexOutOfBoundsException.class)
+    @Test
     public void whenNegativeInput()  {
         Output out = new StubOutput();
         Input in = new StubInput(
