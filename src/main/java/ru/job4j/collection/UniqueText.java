@@ -11,7 +11,7 @@ public class UniqueText {
         for (String original : origin) {
             check.add(original);
         }
-        for (String duplicate : text) {;
+        for (String duplicate : text) {
             if (!check.contains(duplicate)) {
                 rsl = false;
                 break;
