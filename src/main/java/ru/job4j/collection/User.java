@@ -2,12 +2,12 @@ package ru.job4j.collection;
 
 import java.util.Objects;
 
-public class UserTreeSet implements Comparable<UserTreeSet> {
+public class User implements Comparable<User> {
 
     private String name;
     private int age;
 
-    public UserTreeSet(String name, int age) {
+    public User(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -28,7 +28,7 @@ public class UserTreeSet implements Comparable<UserTreeSet> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserTreeSet that = (UserTreeSet) o;
+        User that = (User) o;
         return age == that.age && Objects.equals(name, that.name);
     }
 
@@ -38,7 +38,7 @@ public class UserTreeSet implements Comparable<UserTreeSet> {
     }
 
     @Override
-    public int compareTo(UserTreeSet another) {
+    public int compareTo(User another) {
         int status = this.name.compareTo(another.name);
         return status == 0 ? Integer.compare(this.age, another.age) : status;
     }
