@@ -28,8 +28,8 @@ public class FuncDiapasonTest {
 
     @Test
     public void whenDiapason4To8Expo() {
-        List<Double> result = FuncDiapason.diapason(2, 6, x -> Math.pow(x, x));
-        List<Double> expected = Arrays.asList(4D, 27D, 256D, 3125D, 46656D);
+        List<Double> result = FuncDiapason.diapason(2, 6, x -> Math.pow(2, x));
+        List<Double> expected = Arrays.asList(4D, 8D, 16D, 32D, 64D);
         assertThat(result, is(expected));
     }
 
