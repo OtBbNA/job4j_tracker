@@ -50,14 +50,11 @@ public class BankService {
      * @return - если пользователь ноайден то возвращает объект User, если нет - null
      */
     public User findByPassport(String passport) {
-        User result = null;
-        for (User user : users.keySet()) {
-            if (user.getPassport().equals(passport)) {
-                result = user;
-                break;
-            }
-        }
-        return result;
+        return users.keySet()
+                .stream()
+                .filter(user -> user.getPassport().equals(passport))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -65,7 +62,7 @@ public class BankService {
      * @param passport - данные поспорта User необходимые для поиска его в системе
      * @param requisite - необходим для поиска конкретного счета пользователя
      * вызывается метод findByPassport - получаем доступ к счетам пользователя user
-     * если user существует в системе то проходимся по его счетам циклом foreach
+     * если user существует в системе то проходимся по его счетам с помощью stream
      * @return если у пользоввателя существует счет с таким реквизитом - возвращает этот счет
      * в другом случае - null
      */
@@ -73,11 +70,11 @@ public class BankService {
         User user = findByPassport(passport);
         if (user != null) {
             List<Account> userBankList = users.get(user);
-            for (Account slide : userBankList) {
-                if (slide.getRequisite().equals(requisite)) {
-                    return slide;
-                }
-            }
+            return userBankList
+                    .stream()
+                    .filter(slide -> slide.getRequisite().equals(requisite))
+                    .findFirst()
+                    .orElse(null);
         }
         return null;
     }
