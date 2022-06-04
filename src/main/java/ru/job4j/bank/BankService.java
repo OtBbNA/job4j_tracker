@@ -1,6 +1,8 @@
 package ru.job4j.bank;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *  Класс реализует возможности сервиса по обраотке личных данных пользователей банка
@@ -64,14 +66,14 @@ public class BankService {
      */
     public Optional<Account> findByRequisite(String passport, String requisite) {
         Optional<User> user = findByPassport(passport);
+        Optional<Account> rsl = Optional.empty();
         if (user.isPresent()) {
-            List<Account> userBankList = users.get(user.get());
-            return userBankList
+            rsl = users.get(user.get())
                     .stream()
                     .filter(slide -> slide.getRequisite().equals(requisite))
                     .findFirst();
         }
-        return null;
+        return rsl;
     }
 
     /**
