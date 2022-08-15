@@ -4,31 +4,37 @@ import java.util.*;
 
 public class AnalyzeByMap {
 
-    private static double averageIfKey0SumIfKey1ByPupil(Pupil pupil, int key) {
-        double pupilavg = 0D;
-        for (Subject j : pupil.subjects()) {
-            pupilavg += j.getScore();
+    private static Map averageMapByPupil(List<Pupil> pupils) {
+        Map<String, Double> pupilAvg = new HashMap<>();
+        for (Pupil i : pupils) {
+            double avg = 0D;
+            for (Subject j : i.subjects()) {
+                avg += j.getScore();
+            }
+            pupilAvg.put(i.name(), avg);
         }
-        return key == 0 ? pupilavg / pupil.subjects().size() : pupilavg;
+        return pupilAvg;
     }
 
     public static double averageScore(List<Pupil> pupils) {
+        Map<String, Double> pupilsAvg = AnalyzeByMap.averageMapByPupil(pupils);
         double rsl = 0D;
-        for (Pupil i : pupils) {
-            rsl += AnalyzeByMap.averageIfKey0SumIfKey1ByPupil(i, 0);
+        for (String key : pupilsAvg.keySet()) {
+            rsl += pupilsAvg.get(key);
         }
-        return rsl / pupils.size();
+        return rsl / (pupils.size() * pupils.get(0).subjects().size());
     }
 
     public static List<Label> averageScoreByPupil(List<Pupil> pupils) {
         List<Label> rsl = new ArrayList<>();
-        for (Pupil i : pupils) {
-            rsl.add(new Label(i.name(), AnalyzeByMap.averageIfKey0SumIfKey1ByPupil(i, 0)));
+        Map<String, Double> pupilsAvg = AnalyzeByMap.averageMapByPupil(pupils);
+        for (String key : pupilsAvg.keySet()) {
+             rsl.add(new Label(key, pupilsAvg.get(key) / pupils.size()));
         }
         return rsl;
     }
 
-    private static List<Label> averageIfKey0SumIfKey1ScoreBySubject(List<Pupil> pupils, int key) {
+    private static Map averageMapBySubject(List<Pupil> pupils) {
         Map<String, Integer> interimMap = new LinkedHashMap<>();
         List<Label> rsl = new ArrayList<>();
         for (Pupil i : pupils) {
@@ -37,33 +43,34 @@ public class AnalyzeByMap {
                 interimMap.putIfAbsent(j.getName(), j.getScore());
             }
         }
-        if (key == 0) {
-            for (String i : interimMap.keySet()) {
-                rsl.add(new Label(i, interimMap.get(i) / pupils.size()));
-            }
-        } else if (key == 1) {
-            for (String i : interimMap.keySet()) {
-                rsl.add(new Label(i, interimMap.get(i)));
-            }
+        return interimMap;
+    }
+
+    public static List<Label> averageScoreBySubject(List<Pupil> pupils) {
+        List<Label> rsl = new ArrayList<>();
+        Map<String, Integer> interimMap = AnalyzeByMap.averageMapBySubject(pupils);
+        for (String key : interimMap.keySet()) {
+            rsl.add(new Label(key, interimMap.get(key) / pupils.size()));
         }
         return rsl;
     }
 
-    public static List<Label> averageScoreBySubject(List<Pupil> pupils) {
-        return AnalyzeByMap.averageIfKey0SumIfKey1ScoreBySubject(pupils, 0);
-    }
-
     public static Label bestStudent(List<Pupil> pupils) {
         List<Label> rsl = new ArrayList<>();
-        for (Pupil i : pupils) {
-            rsl.add(new Label(i.name(), AnalyzeByMap.averageIfKey0SumIfKey1ByPupil(i, 1)));
+        Map<String, Double> interimMap = averageMapByPupil(pupils);
+        for (String key : interimMap.keySet()) {
+            rsl.add(new Label(key, interimMap.get(key)));
         }
         Collections.sort(rsl);
         return rsl.get(rsl.size() - 1);
     }
 
     public static Label bestSubject(List<Pupil> pupils) {
-        List<Label> rsl = AnalyzeByMap.averageIfKey0SumIfKey1ScoreBySubject(pupils, 1);
+        List<Label> rsl = new ArrayList<>();
+        Map<String, Integer> interimMap = AnalyzeByMap.averageMapBySubject(pupils);
+        for (String key : interimMap.keySet()) {
+            rsl.add(new Label(key, interimMap.get(key)));
+        }
         Collections.sort(rsl);
         return rsl.get(rsl.size() - 1);
     }
