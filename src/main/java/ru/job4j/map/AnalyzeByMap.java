@@ -4,14 +4,14 @@ import java.util.*;
 
 public class AnalyzeByMap {
 
-    private static Map averageMapByPupil(List<Pupil> pupils) {
+    private static Map<String, Double> averageMapByPupil(List<Pupil> pupils) {
         Map<String, Double> pupilAvg = new HashMap<>();
-        for (Pupil i : pupils) {
+        for (Pupil pupil : pupils) {
             double avg = 0D;
-            for (Subject j : i.subjects()) {
-                avg += j.getScore();
+            for (Subject subject : pupil.subjects()) {
+                avg += subject.getScore();
             }
-            pupilAvg.put(i.name(), avg);
+            pupilAvg.put(pupil.name(), avg);
         }
         return pupilAvg;
     }
@@ -19,10 +19,14 @@ public class AnalyzeByMap {
     public static double averageScore(List<Pupil> pupils) {
         Map<String, Double> pupilsAvg = AnalyzeByMap.averageMapByPupil(pupils);
         double rsl = 0D;
+        int numItems = 0;
         for (String key : pupilsAvg.keySet()) {
             rsl += pupilsAvg.get(key);
         }
-        return rsl / (pupils.size() * pupils.get(0).subjects().size());
+        for (Pupil pupil : pupils) {
+            numItems += pupil.subjects().size();
+        }
+        return rsl / numItems;
     }
 
     public static List<Label> averageScoreByPupil(List<Pupil> pupils) {
@@ -34,16 +38,14 @@ public class AnalyzeByMap {
         return rsl;
     }
 
-    private static Map averageMapBySubject(List<Pupil> pupils) {
-        Map<String, Integer> interimMap = new LinkedHashMap<>();
-        List<Label> rsl = new ArrayList<>();
-        for (Pupil i : pupils) {
-            for (Subject j : i.subjects()) {
-                interimMap.computeIfPresent(j.getName(), (k, t) -> t + j.getScore());
-                interimMap.putIfAbsent(j.getName(), j.getScore());
+    private static Map<String, Integer> averageMapBySubject(List<Pupil> pupils) {
+        Map<String, Integer> res = new LinkedHashMap<>();
+        for (Pupil pupil : pupils) {
+            for (Subject subject : pupil.subjects()) {
+                res.merge(subject.getName(), subject.getScore(), (o, n) -> o + n);
             }
         }
-        return interimMap;
+        return res;
     }
 
     public static List<Label> averageScoreBySubject(List<Pupil> pupils) {

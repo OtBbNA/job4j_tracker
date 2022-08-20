@@ -37,6 +37,36 @@ class AnalyzeByMapTest {
     }
 
     @Test
+    public void whenAverageScoreWithDifferentSubjects() {
+        double average = AnalyzeByMap.averageScore(
+                List.of(
+                        new Pupil("Ivanov",
+                                List.of(
+                                        new Subject("Math", 100),
+                                        new Subject("Lang", 70)
+                                )
+                        ),
+                        new Pupil("Petrov",
+                                List.of(
+                                        new Subject("Math", 80),
+                                        new Subject("Lang", 90),
+                                        new Subject("Philosophy", 70)
+                                )
+                        ),
+                        new Pupil("Sidorov",
+                                List.of(
+                                        new Subject("Math", 70),
+                                        new Subject("Lang", 60),
+                                        new Subject("Philosophy", 50),
+                                        new Subject("Physics", 60)
+                                )
+                        )
+                )
+        );
+        assertThat(average).isCloseTo(72.22, offset(0.01D));
+    }
+
+    @Test
     public void whenListOfPupilAverage() {
         List<Label> average = AnalyzeByMap.averageScoreByPupil(
                 List.of(
