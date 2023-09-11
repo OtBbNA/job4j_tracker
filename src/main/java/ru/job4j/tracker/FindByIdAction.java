@@ -1,10 +1,10 @@
 package ru.job4j.tracker;
 
-public class FindByID implements UserAction {
+public class FindByIdAction implements UserAction {
 
     private final Output out;
 
-    public FindByID(Output out) {
+    public FindByIdAction(Output out) {
         this.out = out;
     }
 
@@ -14,7 +14,7 @@ public class FindByID implements UserAction {
     }
 
     @Override
-    public boolean execute(Input input, Tracker tracker) {
+    public boolean execute(Input input, SqlTracker tracker) {
         out.println("=== Find item by id ===");
         int id = input.askInt("Enter id: ");
         Item item = tracker.findById(id);

@@ -1,10 +1,10 @@
 package ru.job4j.tracker;
 
-public class EditItem implements UserAction {
+public class ReplaceAction implements UserAction {
 
     private final Output out;
 
-    public EditItem(Output out) {
+    public ReplaceAction(Output out) {
         this.out = out;
     }
 
@@ -14,7 +14,7 @@ public class EditItem implements UserAction {
     }
 
     @Override
-    public boolean execute(Input input, Tracker tracker) {
+    public boolean execute(Input input, SqlTracker tracker) {
         out.println("=== Edit item ===");
         int id = input.askInt("Enter id: ");
         String name = input.askStr("Enter name: ");
