@@ -135,7 +135,7 @@ public class SqlTracker implements Store {
         return item;
     }
 
-    private Timestamp timeConverterToTimestamp (LocalDateTime ldt) {
+    private Timestamp timeConverterToTimestamp(LocalDateTime ldt) {
         return Timestamp.valueOf(ldt);
     }
 }
