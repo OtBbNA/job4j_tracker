@@ -3,9 +3,9 @@ package ru.job4j.tracker;
 import ru.job4j.tracker.Item;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -46,30 +46,96 @@ public class SqlTracker implements Store {
 
     @Override
     public Item add(Item item) {
-        return null;
+        try (PreparedStatement statement =
+                     cn.prepareStatement("INSERT INTO items(name, created) VALUES (?, ?);")) {
+            statement.setString(1, item.getName());
+            statement.setTimestamp(2, timeConverterToTimestamp(item.getCreated()));
+            statement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return item;
     }
 
     @Override
     public boolean replace(int id, Item item) {
-        return false;
+        try (PreparedStatement statement =
+                     cn.prepareStatement("UPDATE items SET name = ?, created = ? WHERE id = ?;")) {
+            statement.setString(1, item.getName());
+            statement.setTimestamp(2, timeConverterToTimestamp(item.getCreated()));
+            statement.setInt(3, id);
+            statement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
     public void delete(int id) {
+        try (PreparedStatement statement =
+                     cn.prepareStatement("DELETE FROM items WHERE id = ?;")) {
+            statement.setInt(1, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<Item> findAll() {
-        return null;
+        List<Item> items = new ArrayList<>();
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items")) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    items.add(new Item(
+                            resultSet.getInt("id"),
+                            resultSet.getString("name")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 
     @Override
     public List<Item> findByName(String key) {
-        return null;
+        List<Item> items = new ArrayList<>();
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE name = ?")) {
+            statement.setString(1, key);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    items.add(new Item(
+                            resultSet.getInt("id"),
+                            resultSet.getString("name")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 
     @Override
     public Item findById(int id) {
-        return null;
+        Item item = new Item();
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE id = ?")) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    item.setId(resultSet.getInt("id"));
+                    item.setName(resultSet.getString("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
+
+    private Timestamp timeConverterToTimestamp (LocalDateTime ldt) {
+        return Timestamp.valueOf(ldt);
     }
 }
