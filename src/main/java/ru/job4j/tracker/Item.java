@@ -24,6 +24,12 @@ public class Item implements Comparable<Item> {
         this.name = name;
     }
 
+    public Item(int id, String name, LocalDateTime created) {
+        this.id = id;
+        this.name = name;
+        this.created = created;
+    }
+
     @Override
     public String toString() {
         return "Item{"
