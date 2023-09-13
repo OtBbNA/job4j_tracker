@@ -8,8 +8,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
 
-public class TrackerTest {
-/*
+public class MemTrackerTest {
+
     @Test
     public void whenTestFindById() {
         MemTracker tracker = new MemTracker();
@@ -81,6 +81,4 @@ public class TrackerTest {
         tracker.delete(id);
         assertThat(tracker.findById(id), is(nullValue()));
     }
-
- */
 }

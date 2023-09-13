@@ -54,16 +54,25 @@ public class SqlTracker implements Store {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE created = ?")) {
+            statement.setTimestamp(1, timeConverterToTimestamp(item.getCreated()));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    item.setId(resultSet.getInt("id"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return item;
     }
 
     @Override
     public boolean replace(int id, Item item) {
         try (PreparedStatement statement =
-                     cn.prepareStatement("UPDATE items SET name = ?, created = ? WHERE id = ?;")) {
+                     cn.prepareStatement("UPDATE items SET name = ? WHERE id = ?;")) {
             statement.setString(1, item.getName());
-            statement.setTimestamp(2, timeConverterToTimestamp(item.getCreated()));
-            statement.setInt(3, id);
+            statement.setInt(2, id);
             statement.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,6 +85,7 @@ public class SqlTracker implements Store {
         try (PreparedStatement statement =
                      cn.prepareStatement("DELETE FROM items WHERE id = ?;")) {
             statement.setInt(1, id);
+            statement.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,13 +94,10 @@ public class SqlTracker implements Store {
     @Override
     public List<Item> findAll() {
         List<Item> items = new ArrayList<>();
-        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items")) {
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items;")) {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    items.add(new Item(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name")
-                    ));
+                    items.add(itemCreator(resultSet.getInt("id"), resultSet.getString("name")));
                 }
             }
         } catch (Exception e) {
@@ -102,14 +109,12 @@ public class SqlTracker implements Store {
     @Override
     public List<Item> findByName(String key) {
         List<Item> items = new ArrayList<>();
-        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE name = ?")) {
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE name = ?;")) {
             statement.setString(1, key);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    items.add(new Item(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name")
-                    ));
+                    items.add(itemCreator(resultSet.getInt("id"), resultSet.getString("name"))
+                    );
                 }
             }
         } catch (Exception e) {
@@ -121,18 +126,21 @@ public class SqlTracker implements Store {
     @Override
     public Item findById(int id) {
         Item item = new Item();
-        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE id = ?")) {
+        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE id = ?;")) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    item.setId(resultSet.getInt("id"));
-                    item.setName(resultSet.getString("name"));
+                    item = itemCreator(resultSet.getInt("id"), resultSet.getString("name"));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return item;
+    }
+
+    private Item itemCreator(int id, String name) {
+        return new Item(id, name);
     }
 
     private Timestamp timeConverterToTimestamp(LocalDateTime ldt) {

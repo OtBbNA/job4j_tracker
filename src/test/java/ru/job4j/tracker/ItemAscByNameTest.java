@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ItemAscByNameTest {
-/*
+
     @Test
     public void compare() {
         Item item1 = new Item(1, "Sasha");
@@ -20,5 +20,4 @@ public class ItemAscByNameTest {
         List<Item> expected = Arrays.asList(item3, item2, item4, item1);
         Assert.assertArrayEquals(new List[]{expected}, new List[]{items});
     }
- */
 }

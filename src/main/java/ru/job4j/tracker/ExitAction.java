@@ -14,7 +14,7 @@ public class ExitAction implements UserAction {
     }
 
     @Override
-    public boolean execute(Input input, SqlTracker tracker) {
+    public boolean execute(Input input, Store tracker) {
         out.println("=== Exit Program ===");
         return false;
     }
