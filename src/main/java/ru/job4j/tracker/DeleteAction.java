@@ -17,13 +17,16 @@ public class DeleteAction implements UserAction {
     public boolean execute(Input input, Store tracker) {
         out.println("=== Delete item ===");
         int id = input.askInt("Enter id: ");
-        int idCheck = tracker.findById(id).getId();
-        tracker.delete(id);
-        if (tracker.findById(id).getId() != idCheck) {
-            out.println("Заявка удалена успешно.");
-        } else {
+        if (tracker.findById(id) == null) {
             out.println("Ошибка удаления заявки.");
-        }
+        } else {
+            tracker.delete(id);
+            if (tracker.findById(id) == null) {
+                out.println("Заявка удалена успешно.");
+            } else {
+                out.println("Ошибка удаления заявки.");
+            }
+    }
         return true;
     }
 }
