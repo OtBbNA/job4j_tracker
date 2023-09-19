@@ -46,18 +46,13 @@ public class SqlTracker implements Store {
     public Item add(Item item) {
         Timestamp time = timeConverterToTimestamp(item.getCreated());
         try (PreparedStatement statement =
-                     cn.prepareStatement("INSERT INTO items(name, created) VALUES (?, ?);")) {
+                     cn.prepareStatement("INSERT INTO items (name, created) VALUES (?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, item.getName());
             statement.setTimestamp(2, time);
             statement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try (PreparedStatement statement = cn.prepareStatement("SELECT * FROM items WHERE created = ?")) {
-            statement.setTimestamp(1, time);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    item.setId(resultSet.getInt("id"));
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    item.setId(generatedKeys.getInt(1));
                 }
             }
         } catch (Exception e) {
@@ -76,6 +71,7 @@ public class SqlTracker implements Store {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        item.setId(id);
         return true;
     }
 
