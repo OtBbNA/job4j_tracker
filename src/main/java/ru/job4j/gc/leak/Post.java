@@ -1,7 +1,5 @@
 package ru.job4j.gc.leak;
 
-import java.util.List;
-
 public class Post {
 
     private Integer id;
@@ -9,12 +7,6 @@ public class Post {
     private String text;
 
     private Comment comments;
-
-    public Post(Integer id, String text, Comment comments) {
-        this.id = id;
-        this.text = text;
-        this.comments = comments;
-    }
 
     public Post(String text, Comment comments) {
         this.text = text;
