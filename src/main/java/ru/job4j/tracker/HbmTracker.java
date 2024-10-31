@@ -83,7 +83,7 @@ public class HbmTracker implements Store, AutoCloseable {
         Session session = sf.getCurrentSession();
         try {
             session.getTransaction().begin();
-            Query<Item> query = session.createQuery("FROM Item", Item.class);
+            Query<Item> query = session.createQuery("FROM Item i LEFT JOIN FETCH i.participates", Item.class);
             rsl = query.getResultList();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class HbmTracker implements Store, AutoCloseable {
         Session session = sf.getCurrentSession();
         try {
             session.getTransaction().begin();
-            Query<Item> query = session.createQuery("FROM Item WHERE name = :fName", Item.class).setParameter("fName", key);
+            Query<Item> query = session.createQuery("FROM Item i LEFT JOIN FETCH i.participates WHERE i.name = :fName", Item.class).setParameter("fName", key);
             rsl = query.getResultList();
             session.getTransaction().commit();
         } catch (Exception e) {
